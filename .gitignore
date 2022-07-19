@@ -1,23 +1,30 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# VSCode project files
+vzhooh.code-workspace
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/extensions.json
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# IntelliJ project files
+*.iml
+*.iws
+*.ipr
+.idea/
 
-# testing
-/coverage
+# Eclipse project file
+.settings/
+.classpath
+.project
 
-# production
-/build
-
-# misc
+# OS
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.idea
+*.iml
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+node_modules
+npm-debug.log
+
+dist/
+packages/
+.report/
+.temp/
