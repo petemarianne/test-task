@@ -16,8 +16,32 @@
     top: 15%;
   }
 
-  .bunny.hidden {
+  .hidden {
     display: none;
+  }
+
+  .small {
+    width: 35%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 40%;
+    right: 0;
+    top: 35%;
+  }
+
+  .thumb {
+    position: absolute;
+    left: 10%;
+    right: 0;
+    top: 10%;
+  }
+
+  .up {
+    color: rgba(green, 0.8);
+  }
+
+  .down {
+    color: rgba(red, 0.8);
   }
 }
 

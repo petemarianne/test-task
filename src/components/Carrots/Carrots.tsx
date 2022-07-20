@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import './Carrots.scss';
 import { Carrot } from '../Carrot/Carrot';
 import { useDispatch, useSelector } from 'react-redux';
-import { random, randomNext } from '../../utils';
-import { end } from "../../redux/actions/endAction";
+import { randomNextMove } from '../../utils';
+import { end } from '../../redux/actions/endAction';
+import { isLoading } from '../../redux/actions/isLoadingAction';
 
 export const Carrots: React.FC = (): JSX.Element => {
     const dispatch = useDispatch();
-    const start = useSelector<any, any>(state => state.start);
+    const startPos = useSelector<any, any>(state => state.start);
+    const click = useSelector<any,any>(state => state.clicked);
+    const loaded = useSelector<any,any>(state => state.isLoading);
 
-    const carrots = [];
+    const carrots: { key: string; hidden: string; angle: number; }[] = [];
     for (let i = 0; i < 10; i++) {
         carrots.push({
             key: `key${i}`,
@@ -22,51 +25,50 @@ export const Carrots: React.FC = (): JSX.Element => {
     const [carrotsInfo, setCarrotsInfo] = useState({carrots, index: 0});
 
     useEffect(() => {
-        if (start && cur === -1) setCur(start);
-        if ((cur !== -1 || start === 0) && carrotsInfo.index < 11) {
-            let next = 0;
-            const first = start === 0 ? 0 : Math.trunc(cur / 10);
-            const last = start === 0 ? 0 : cur % 10;
-            switch (first) {
-                case 0:
-                    switch (last) {
-                        case 0: next += randomNext(random(0,2),1); break;
-                        case 1: next += randomNext(random(0,3),1); break;
-                        case 2: next += randomNext(random(0,2),2); break;
+        if (loaded !== 2) {
+            if ((startPos || startPos === 0) && cur === -1) setCur(startPos);
+            if (cur !== -1 && carrotsInfo.index < 11) {
+                let next = 0;
+                const first = Math.trunc(cur / 10);
+                const last = cur % 10;
+                next += randomNextMove(first, last)
+                const newCarrots = [...carrotsInfo.carrots];
+                if (carrotsInfo.index !== 10) {
+                    let angle;
+                    switch (next) {
+                        case 10:
+                            angle = 90;
+                            break;
+                        case -1:
+                            angle = 180;
+                            break;
+                        case -10:
+                            angle = 270;
+                            break;
+                        default:
+                            angle = 0;
                     }
-                    break;
-                case 1:
-                    switch (last) {
-                        case 0: next += randomNext(random(0,3),0); break;
-                        case 1: next += randomNext(random(0,4),0); break;
-                        case 2: next += randomNext(random(0,3),2); break;
-                    }
-                    break;
-                case 2:
-                    switch (last) {
-                        case 0: next += randomNext(random(0,2),0); break;
-                        case 1: next += randomNext(random(0,3),3); break;
-                        case 2: next += randomNext(random(0,2),3); break;
-                    }
-                    break;
-            }
-            const newCarrots = [...carrotsInfo.carrots];
-            if (carrotsInfo.index !== 10) {
-                let angle;
-                switch (next) {
-                    case 10: angle = 90; break;
-                    case -1: angle = 180; break;
-                    case -10: angle = 270; break;
-                    default: angle = 0;
+                    newCarrots[carrotsInfo.index].hidden = '';
+                    newCarrots[carrotsInfo.index].angle = angle;
                 }
-                newCarrots[carrotsInfo.index].hidden = '';
-                newCarrots[carrotsInfo.index].angle = angle;
+                setCarrotsInfo(prevState => ({carrots: newCarrots, index: prevState.index + 1}));
+                setTimeout(() => setCur(prevState => prevState + next), 1000);
             }
-            setCarrotsInfo(prevState => ({carrots: newCarrots, index: prevState.index + 1}));
-            setTimeout(() => setCur(prevState => prevState + next), 1000);
+            if (carrotsInfo.index === 10) {
+                dispatch(end(cur));
+                dispatch(isLoading(2));
+            }
         }
-        if (carrotsInfo.index === 10) dispatch(end(cur));
-    }, [cur, start])
+    }, [cur, startPos]);
+
+    useEffect(() => {
+        if (click === -1) {
+            setTimeout(() => {
+                setCarrotsInfo({carrots, index: 0});
+                setCur(-1);
+            }, 3000);
+        }
+    }, [click])
 
     return (
         <div className='carrots'>

@@ -6,6 +6,9 @@ import './styles/buttons.scss';
 import { useDispatch } from 'react-redux';
 import { start } from './redux/actions/startAction';
 import { random } from './utils';
+import { isLoading } from './redux/actions/isLoadingAction';
+import { clicked } from './redux/actions/clickedAction';
+import { end } from './redux/actions/endAction';
 
 const App: React.FC = (): JSX.Element => {
     const dispatch = useDispatch();
@@ -20,6 +23,9 @@ const App: React.FC = (): JSX.Element => {
             number += 20;
         }
         dispatch(start(number));
+        dispatch(isLoading(0));
+        dispatch(clicked(-2));
+        dispatch(end(-1));
     }
 
     return (
