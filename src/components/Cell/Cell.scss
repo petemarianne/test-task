@@ -1,0 +1,36 @@
+.cell {
+  position: relative;
+  background-image: url("../../assets/images/ground.jpeg");
+  width: 180px;
+  height: 180px;
+  border-radius: 10px;
+  margin: 4px;
+
+  .bunny {
+    position: absolute;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 15%;
+  }
+
+  .bunny.hidden {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .cell {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .cell {
+    width: 80px;
+    height: 80px;
+  }
+}
